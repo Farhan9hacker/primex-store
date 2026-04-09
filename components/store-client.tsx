@@ -25,10 +25,12 @@ interface StoreClientProps {
     initialProducts: Product[]
     userIgn: string | null
     discordConnected: boolean
+    isLoggedIn?: boolean
 }
 
-export default function StoreClient({ initialProducts, userIgn, discordConnected }: StoreClientProps) {
+export default function StoreClient({ initialProducts, userIgn, discordConnected, isLoggedIn = false }: StoreClientProps) {
     const [purchaseModalOpen, setPurchaseModalOpen] = useState(false)
+    const [loginModalOpen, setLoginModalOpen] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [confirmIgn, setConfirmIgn] = useState(userIgn || '')
     const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0])
@@ -70,6 +72,10 @@ export default function StoreClient({ initialProducts, userIgn, discordConnected
     }, [selectedCategory])
 
     const openPurchaseModal = (product: Product) => {
+        if (!isLoggedIn) {
+            setLoginModalOpen(true)
+            return
+        }
         setSelectedProduct(product)
         setConfirmIgn(userIgn || '')
         setPurchaseModalOpen(true)
@@ -113,8 +119,51 @@ export default function StoreClient({ initialProducts, userIgn, discordConnected
     return (
         <div className="flex-1 container mx-auto px-4 py-8">
             {/* Purchase Modal */}
-            {/* Purchase Modal */}
+            {/* Modals */}
             <AnimatePresence>
+                {loginModalOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.95, opacity: 0, y: -20 }}
+                            transition={{ type: "spring", duration: 0.4 }}
+                            className="bg-[#0f0f15]/90 border border-purple-500/20 rounded-2xl w-full max-w-sm p-6 shadow-[0_8px_30px_rgba(124,58,237,0.2)] text-center relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 right-0 p-4 opacity-5">
+                                <Info className="h-32 w-32 text-purple-500" />
+                            </div>
+                            <div className="relative z-10">
+                                <div className="bg-purple-600/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border border-purple-500/30 shadow-[0_0_15px_rgba(124,58,237,0.3)]">
+                                    <Info className="h-8 w-8 text-purple-400" />
+                                </div>
+                                <h2 className="text-2xl font-bold mb-2 text-white">Sign In Required</h2>
+                                <p className="text-zinc-400 mb-6 text-sm">
+                                    You must be logged in to purchase items from the store. This ensures your items and purchases are tracked securely.
+                                </p>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => setLoginModalOpen(false)}
+                                        className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl transition-all"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <a
+                                        href="/login"
+                                        className="flex-1 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:shadow-[0_0_25px_rgba(124,58,237,0.5)] flex items-center justify-center"
+                                    >
+                                        Sign In
+                                    </a>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
                 {purchaseModalOpen && selectedProduct && (
                     <motion.div
                         initial={{ opacity: 0 }}

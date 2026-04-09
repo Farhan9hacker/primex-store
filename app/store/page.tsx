@@ -26,6 +26,7 @@ export default async function StorePage() {
                 initialProducts={products}
                 userIgn={user?.minecraftIgn || null}
                 discordConnected={!!user?.discordId}
+                isLoggedIn={!!session}
             />
         </div>
     )
