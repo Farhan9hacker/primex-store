@@ -26,6 +26,7 @@ export default function AdminUsersPage() {
     const [password, setPassword] = useState('')
     const [role, setRole] = useState('')
     const [ign, setIgn] = useState('')
+    const [walletAmount, setWalletAmount] = useState('')
     const [processing, setProcessing] = useState(false)
 
     useEffect(() => {
@@ -97,6 +98,36 @@ export default function AdminUsersPage() {
             }
         } catch {
             toast.error('Error updating user')
+        } finally {
+            setProcessing(false)
+        }
+    }
+
+    const handleWalletMod = async (action: 'ADD' | 'REMOVE') => {
+        if (!editingUser) return
+        const amount = parseFloat(walletAmount)
+        if (isNaN(amount) || amount <= 0) return toast.error("Invalid amount")
+        setProcessing(true)
+        
+        try {
+            const res = await fetch(`/api/admin/users/${editingUser.id}/wallet`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount, action })
+            })
+            
+            if (res.ok) {
+                const data = await res.json()
+                toast.success('Wallet updated successfully')
+                setWalletAmount('')
+                setEditingUser(prev => prev && prev.wallet ? { ...prev, wallet: { ...prev.wallet, balance: data.newBalance } } : prev)
+                fetchUsers()
+            } else {
+                const err = await res.json()
+                toast.error(err.error || 'Failed to modify wallet')
+            }
+        } catch {
+            toast.error('Error modifying wallet')
         } finally {
             setProcessing(false)
         }
@@ -180,6 +211,7 @@ export default function AdminUsersPage() {
                                                 setEditingUser(user)
                                                 setRole(user.role)
                                                 setIgn(user.minecraftIgn || '')
+                                                setWalletAmount('')
                                             }}
                                             className="text-zinc-400 hover:text-white p-1 hover:bg-zinc-800 rounded transition"
                                             title="Edit User"
@@ -260,8 +292,38 @@ export default function AdminUsersPage() {
                                 disabled={processing}
                                 className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded mt-4 transition-colors disabled:opacity-50"
                             >
-                                {processing ? 'Saving...' : 'Save Changes'}
+                                {processing ? 'Saving...' : 'Save User Changes'}
                             </button>
+
+                            {editingUser.wallet && (
+                                <div className="mt-6 pt-6 border-t border-zinc-800">
+                                    <label className="block text-sm text-zinc-400 mb-2">Modify Wallet Balance (Current: ₹{editingUser.wallet.balance})</label>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="number"
+                                            placeholder="Amount to Adjust"
+                                            className="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-white"
+                                            value={walletAmount}
+                                            onChange={e => setWalletAmount(e.target.value)}
+                                        />
+                                        <button 
+                                            onClick={() => handleWalletMod('ADD')}
+                                            disabled={processing || !walletAmount}
+                                            className="px-4 py-2 bg-green-600/20 text-green-500 hover:bg-green-600 hover:text-white rounded font-bold transition disabled:opacity-50"
+                                        >
+                                            Add
+                                        </button>
+                                        <button 
+                                            onClick={() => handleWalletMod('REMOVE')}
+                                            disabled={processing || !walletAmount}
+                                            className="px-4 py-2 bg-red-600/20 text-red-500 hover:bg-red-600 hover:text-white rounded font-bold transition disabled:opacity-50"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                    <p className="text-xs text-zinc-500 mt-2">Adjustments are automatically logged.</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
-import { Loader2, Palette } from 'lucide-react'
+import { Loader2, Palette, Megaphone } from 'lucide-react'
 
 const THEMES = [
     { id: 'DEFAULT', name: 'Default (Purple)', color: 'bg-purple-600' },
@@ -12,6 +12,8 @@ const THEMES = [
 
 export default function SettingsPage() {
     const [currentTheme, setCurrentTheme] = useState('DEFAULT')
+    const [bannerText, setBannerText] = useState('')
+    const [bannerEnabled, setBannerEnabled] = useState(false)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
 
@@ -20,6 +22,8 @@ export default function SettingsPage() {
             .then(res => res.json())
             .then(data => {
                 setCurrentTheme(data.theme)
+                setBannerText(data.bannerText || '')
+                setBannerEnabled(data.bannerEnabled || false)
                 setLoading(false)
             })
             .catch(() => toast.error('Failed to load settings'))
@@ -27,7 +31,7 @@ export default function SettingsPage() {
 
     const saveTheme = async (themeId: string) => {
         setSaving(true)
-        setCurrentTheme(themeId) // Optimistic update
+        setCurrentTheme(themeId)
         try {
             const res = await fetch('/api/admin/settings', {
                 method: 'POST',
@@ -36,9 +40,6 @@ export default function SettingsPage() {
             })
             if (res.ok) {
                 toast.success('Theme updated!')
-                // Force a reload to apply theme if we were doing server-side injection, 
-                // but for now we might need client side context or just reload.
-                // Let's reload to be safe and simple.
                 window.location.reload()
             } else {
                 toast.error('Failed to save theme')
@@ -50,10 +51,30 @@ export default function SettingsPage() {
         }
     }
 
+    const saveBanner = async () => {
+        setSaving(true)
+        try {
+            const res = await fetch('/api/admin/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ bannerText, bannerEnabled })
+            })
+            if (res.ok) {
+                toast.success('Site Banner updated successfully!')
+            } else {
+                toast.error('Failed to update banner')
+            }
+        } catch {
+            toast.error('Error saving banner setup')
+        } finally {
+            setSaving(false)
+        }
+    }
+
     if (loading) return <div className="p-8"><Loader2 className="animate-spin" /></div>
 
     return (
-        <div className="p-8 max-w-4xl mx-auto">
+        <div className="p-8 max-w-4xl mx-auto space-y-8">
             <h1 className="text-3xl font-bold mb-8 flex items-center gap-3">
                 <Palette className="h-8 w-8 text-purple-400" />
                 Store Settings
@@ -82,6 +103,48 @@ export default function SettingsPage() {
                             </div>
                         </button>
                     ))}
+                </div>
+            </div>
+
+            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <Megaphone className="h-6 w-6 text-purple-400" />
+                    Global Site Banner
+                </h2>
+                <p className="text-sm text-zinc-500 mb-6">Display a public announcement or flash sale across the top of all pages.</p>
+                
+                <div className="space-y-4">
+                    <div className="flex items-center gap-3 mb-4">
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input 
+                                type="checkbox" 
+                                className="sr-only peer" 
+                                checked={bannerEnabled}
+                                onChange={e => setBannerEnabled(e.target.checked)}
+                            />
+                            <div className="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                        </label>
+                        <span className="font-medium text-white">{bannerEnabled ? 'Enabled' : 'Disabled'}</span>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm text-zinc-400 mb-2">Announcement Text (Supports Emojis)</label>
+                        <input
+                            type="text"
+                            placeholder="e.g. 🎉 NEW SEASON OUT NOW! 20% OFF ALL RANKS WITH CODE 'SUMMER26'"
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-3 text-white"
+                            value={bannerText}
+                            onChange={e => setBannerText(e.target.value)}
+                        />
+                    </div>
+                    
+                    <button
+                        onClick={saveBanner}
+                        disabled={saving}
+                        className="bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-6 rounded-lg transition-colors mt-2"
+                    >
+                        Save Banner Status
+                    </button>
                 </div>
             </div>
         </div>

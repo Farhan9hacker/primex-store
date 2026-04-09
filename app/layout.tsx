@@ -29,10 +29,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const themeSetting = await prisma.systemSetting.findUnique({
-    where: { key: 'theme' }
-  })
+  const [themeSetting, bannerTextSet, bannerEnabledSet] = await Promise.all([
+    prisma.systemSetting.findUnique({ where: { key: 'theme' } }),
+    prisma.systemSetting.findUnique({ where: { key: 'SITE_BANNER_TEXT' } }),
+    prisma.systemSetting.findUnique({ where: { key: 'SITE_BANNER_ENABLED' } })
+  ])
+  
   const themeClass = themeSetting?.value ? `theme-${themeSetting.value}` : ''
+  const bannerEnabled = bannerEnabledSet?.value === 'true'
+  const bannerText = bannerTextSet?.value || ''
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -40,6 +45,11 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased text-white ${themeClass}`}
       >
         <SessionProvider>
+          {bannerEnabled && bannerText && (
+            <div className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white text-center py-2 px-4 shadow-[0_0_15px_rgba(168,85,247,0.3)] z-50 relative flex items-center justify-center gap-2 font-bold tracking-wide">
+               {bannerText}
+            </div>
+          )}
           {children}
           <Footer />
           <Toaster />
