@@ -17,6 +17,7 @@ interface Product {
     category: string
     imageUrl?: string | null
     discordRoleId?: string | null
+    serverMode?: string
 }
 
 const CATEGORIES = ['All', 'Ranks', 'Crates', 'Keys', 'Special Items']
@@ -305,10 +306,15 @@ export default function StoreClient({ initialProducts, userIgn, discordConnected
                                 <ShoppingBag className="h-32 w-32 text-purple-400" />
                             </div>
 
-                            <div className="mb-4 z-10 flex-none">
+                            <div className="mb-4 z-10 flex-none flex items-center gap-2">
                                 <span className="text-[10px] font-bold text-purple-300 uppercase tracking-widest bg-purple-500/10 px-3 py-1.5 rounded-full ring-1 ring-purple-500/20 shadow-[0_0_10px_rgba(124,58,237,0.1)]">
                                     {product.type}
                                 </span>
+                                {product.serverMode && (
+                                    <span className="text-[10px] font-bold text-blue-300 uppercase tracking-widest bg-blue-500/10 px-3 py-1.5 rounded-full ring-1 ring-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]">
+                                        {product.serverMode}
+                                    </span>
+                                )}
                             </div>
 
                             {/* Product Image */}
