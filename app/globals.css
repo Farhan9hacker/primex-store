@@ -60,11 +60,11 @@
       radial-gradient(circle at 85% 30%, rgba(124, 58, 237, 0.05) 0%, transparent 50%);
     background-attachment: fixed;
     color: var(--color-foreground);
-    cursor: url('/diamond-sword.png'), auto;
+    cursor: url('/diamond-sword.png') 0 0, auto;
   }
 
   a, button, [role="button"] {
-    cursor: url('/diamond-sword.png'), pointer !important;
+    cursor: url('/diamond-sword.png') 0 0, pointer !important;
   }
 }
 
