@@ -214,6 +214,7 @@ export default function ProductForm({ onClose, initialData }: { onClose: () => v
                                 onChange={e => setFormData({ ...formData, serverMode: e.target.value })}
                             >
                                 <option value="ANARCHY">Anarchy</option>
+                                <option value="SMP">SMP</option>
                                 <option value="CPVP">Crystal PvP</option>
                                 <option value="LIFESTEAL">Lifesteal</option>
                                 <option value="LOBBY">Lobby</option>
