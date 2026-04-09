@@ -1,0 +1,8 @@
+[2025-12-15T05:41:50.933Z] Request: 148.113.5.88:7007 "v"
+[2025-12-15T05:41:51.101Z] Result: {"success":true,"response":" ✘ §x§c§9§3§4§3§4§lᴇʀʀᴏʀ §x§6§d§6§d§6§d• §fᴘʟᴀʏᴇʀ ɴᴏᴛ ꜰᴏᴜɴᴅ\n"}
+[2025-12-15T05:41:59.981Z] Request: 148.113.5.88:7007 "say hi"
+[2025-12-15T05:42:00.142Z] Result: {"success":true,"response":""}
+[2025-12-15T05:42:09.765Z] Request: 148.113.5.88:7007 "pl"
+[2025-12-15T05:42:09.913Z] Result: {"success":true,"response":"§x§3§4§9§f§d§aℹ §fServer Plugins (26):\n§x§0§2§8§8§d§1Paper Plugins (0):\n§x§e§d§8§1§0§6Bukkit Plugins (26):\n §8- §aAngleGuard§r, §aAntiMaceKill§r, §aChunky§r, §cCoreProtect§r, §aDiscordSRV§r, §aDonutTPA§r, §aEssentials§r, §aEssentialsChat§r, §aExploitFixer§r, §aHamsterAPI\n §aLogger§r, §aLuckPerms§r, §aOpenInv§r, §apacketevents§r, §aPlaceholderAPI§r, §aPlayerKits2§r, §aRedstoneLimiter§r, §aSkBee§r, §aSkinsRestorer§r, §aSkript\n §askript-reflect§r, §aTAB§r, §aVault§r, §aViaBackwards§r, §aViaVersion§r, §avoicechat\n"}
+[2025-12-15T05:42:17.222Z] Request: 148.113.5.88:7007 "list"
+[2025-12-15T05:42:17.372Z] Result: {"success":true,"response":" ❄ §x§a§c§e§5§e§e§lᴏɴʟɪɴᴇ §x§6§d§6§d§6§d• §fᴛʜᴇʀᴇ ᴀʀᴇ §x§b§6§d§9§d§85§f/§x§b§6§d§9§d§8100§f ᴘʟᴀʏᴇʀꜱ ᴏɴʟɪɴᴇ\n  §x§6§d§6§d§6§d• §fdefault §x§6§d§6§d§6§d• §e§l🪓 §fABStrike, §e§l🪓 §ffallout346MM, §e§l🪓 §fGOD_EXE_98, §e§l🪓 §fkunjan_1, §e§l🪓 §fstarkff\n"}

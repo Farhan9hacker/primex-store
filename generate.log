@@ -1,0 +1,103 @@
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Error: Prisma schema validation - (get-dmmf wasm)
+Error code: P1012
+[1;91merror[0m: [1mError validating: You defined the enum `Role`. But the current connector does not support enums.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:15[0m
+[1;94m   | [0m
+[1;94m14 | [0m// Enums
+[1;94m15 | [0m[1;91menum Role {[0m
+[1;94m16 | [0m  USER
+[1;94m17 | [0m  ADMIN
+[1;94m18 | [0m  MODERATOR
+[1;94m19 | [0m}
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating: You defined the enum `WalletStatus`. But the current connector does not support enums.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:21[0m
+[1;94m   | [0m
+[1;94m20 | [0m
+[1;94m21 | [0m[1;91menum WalletStatus {[0m
+[1;94m22 | [0m  ACTIVE
+[1;94m23 | [0m  FROZEN
+[1;94m24 | [0m}
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating: You defined the enum `TransactionType`. But the current connector does not support enums.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:26[0m
+[1;94m   | [0m
+[1;94m25 | [0m
+[1;94m26 | [0m[1;91menum TransactionType {[0m
+[1;94m27 | [0m  DEPOSIT
+[1;94m28 | [0m  PURCHASE
+[1;94m29 | [0m  REFUND
+[1;94m30 | [0m  ADJUSTMENT
+[1;94m31 | [0m}
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating: You defined the enum `PaymentStatus`. But the current connector does not support enums.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:33[0m
+[1;94m   | [0m
+[1;94m32 | [0m
+[1;94m33 | [0m[1;91menum PaymentStatus {[0m
+[1;94m34 | [0m  PENDING
+[1;94m35 | [0m  APPROVED
+[1;94m36 | [0m  REJECTED
+[1;94m37 | [0m}
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating: You defined the enum `RiskLevel`. But the current connector does not support enums.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:39[0m
+[1;94m   | [0m
+[1;94m38 | [0m
+[1;94m39 | [0m[1;91menum RiskLevel {[0m
+[1;94m40 | [0m  LOW
+[1;94m41 | [0m  MEDIUM
+[1;94m42 | [0m  HIGH
+[1;94m43 | [0m}
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating: You defined the enum `ProductType`. But the current connector does not support enums.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:45[0m
+[1;94m   | [0m
+[1;94m44 | [0m
+[1;94m45 | [0m[1;91menum ProductType {[0m
+[1;94m46 | [0m  RANK
+[1;94m47 | [0m  ITEM
+[1;94m48 | [0m  COMMAND
+[1;94m49 | [0m  BUNDLE
+[1;94m50 | [0m}
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating: You defined the enum `ServerMode`. But the current connector does not support enums.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:52[0m
+[1;94m   | [0m
+[1;94m51 | [0m
+[1;94m52 | [0m[1;91menum ServerMode {[0m
+[1;94m53 | [0m  ANARCHY
+[1;94m54 | [0m  CPVP
+[1;94m55 | [0m  LIFESTEAL
+[1;94m56 | [0m  LOBBY
+[1;94m57 | [0m}
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating: You defined the enum `OrderStatus`. But the current connector does not support enums.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:59[0m
+[1;94m   | [0m
+[1;94m58 | [0m
+[1;94m59 | [0m[1;91menum OrderStatus {[0m
+[1;94m60 | [0m  PENDING
+[1;94m61 | [0m  PAID
+[1;94m62 | [0m  DELIVERED
+[1;94m63 | [0m  FAILED
+[1;94m64 | [0m  REFUNDED
+[1;94m65 | [0m}
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating: You defined the enum `DeliveryStatus`. But the current connector does not support enums.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:67[0m
+[1;94m   | [0m
+[1;94m66 | [0m
+[1;94m67 | [0m[1;91menum DeliveryStatus {[0m
+[1;94m68 | [0m  PENDING
+[1;94m69 | [0m  SENT
+[1;94m70 | [0m  FAILED
+[1;94m71 | [0m}
+[1;94m   | [0m
+
+Validation Error Count: 9
+[Context: getDmmf]
+
+Prisma CLI Version : 5.22.0

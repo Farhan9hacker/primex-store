@@ -1,0 +1,153 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Models
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  minecraftIgn  String?   @unique
+  discordId     String?   @unique
+  image         String?
+  role          String    @default("USER") // USER, ADMIN, MODERATOR
+  twoFactorSecret String?
+  twoFactorEnabled Boolean @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLogin     DateTime?
+
+  wallet        Wallet?
+  payments      Payment[]
+  orders        Order[]
+  adminLogs     AdminLog[]
+}
+
+model Wallet {
+  id          String         @id @default(cuid())
+  userId      String         @unique
+  balance     Float          @default(0.0)
+  status      String         @default("ACTIVE") // ACTIVE, FROZEN
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions WalletTransaction[]
+}
+
+model WalletTransaction {
+  id          String          @id @default(cuid())
+  walletId    String
+  amount      Float
+  type        String          // DEPOSIT, PURCHASE, REFUND, ADJUSTMENT
+  status      String          @default("COMPLETED") // PENDING, APPROVED, FAILED
+  description String?
+  createdAt   DateTime        @default(now())
+  
+  wallet      Wallet          @relation(fields: [walletId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  userId        String
+  amount        Float
+  utr           String        @unique
+  screenshotUrl String?
+  gatewayOrderId String?      @unique
+  status        String        @default("PENDING") // PENDING, APPROVED, REJECTED
+  riskLevel     String        @default("LOW")     // LOW, MEDIUM, HIGH
+  createdAt     DateTime      @default(now())
+  reviewedBy    String?       
+  reviewedAt    DateTime?
+
+  user          User          @relation(fields: [userId], references: [id])
+}
+
+model Product {
+  id              String      @id @default(cuid())
+  name            String
+  description     String
+  price           Float
+  originalPrice   Float?
+  imageUrl        String?
+  type            String      // RANK, ITEM, COMMAND, BUNDLE
+  category        String      
+  serverMode      String      // ANARCHY, CPVP, LIFESTEAL, LOBBY
+  deliveryCommand String      
+  isPermanent     Boolean     @default(true)
+  stock           Int?        
+  isEnabled       Boolean     @default(true)
+  isFeatured      Boolean     @default(false)
+  discordRoleId   String?     // Role ID to assign on purchase
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+
+  orders          Order[]
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  userId        String
+  productId     String
+  amount        Float       
+  status        String      @default("PENDING") // PENDING, PAID, DELIVERED, FAILED, REFUNDED
+  serverMode    String      
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  user          User        @relation(fields: [userId], references: [id])
+  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  delivery      DeliveryQueue?
+  rconLogs      RconLog[]
+}
+
+model DeliveryQueue {
+  id            String         @id @default(cuid())
+  orderId       String         @unique
+  command       String
+  status        String         @default("PENDING") // PENDING, SENT, FAILED
+  retryCount    Int            @default(0)
+  lastAttempt   DateTime?
+  createdAt     DateTime       @default(now())
+
+  order         Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model AdminLog {
+  id          String   @id @default(cuid())
+  adminId     String
+  action      String
+  targetId    String?  
+  ipHash      String
+  timestamp   DateTime @default(now())
+
+  admin       User     @relation(fields: [adminId], references: [id])
+  details     String?  // JSON string for extra info
+}
+
+model SystemSetting {
+  key   String @id
+  value String
+}
+
+model RconLog {
+  id        String   @id @default(cuid())
+  command   String
+  response  String?  
+  status    String   
+  source    String   @default("SYSTEM") // SYSTEM, MANUAL, DELIVERY
+  performedBy String? 
+  createdAt DateTime @default(now())
+  metadata  String?  // JSON string for extra execution details
+
+  // Optional: Link to order if it was a delivery
+  orderId   String?
+  order     Order?   @relation(fields: [orderId], references: [id])
+}
